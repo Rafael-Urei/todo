@@ -59,7 +59,10 @@ function TaskPaper({ task }: Props) {
         <Card sx={{ minWidth: 400, margin: 2 }}>
           <CardHeader
             avatar={
-              <Chip label={task.type.map((type) => type)} variant="outlined" />
+              <Chip
+                label={task.type.map((type) => type.title)}
+                variant="outlined"
+              />
             }
             title={task.title}
             subheader={format(new Date(task.date), "yyyy/MM/dd cccc")}

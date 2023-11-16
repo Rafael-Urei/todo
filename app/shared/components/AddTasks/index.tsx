@@ -78,6 +78,7 @@ export function AddTaskButton() {
   const handleNext = () => {
     {
       triggerError() && setActive((prev) => prev + 1), clearErrors();
+      console.log(getValues("type"));
     }
   };
 
@@ -184,7 +185,6 @@ export function AddTaskButton() {
               <TextField
                 {...register("date")}
                 value={formatDateToString(selectedDate)}
-                disabled
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <StaticDatePicker

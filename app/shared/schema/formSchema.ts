@@ -6,7 +6,7 @@ export const Form = z.object({
     type: z.array(z.object({
         id: z.number(),
         title: z.string()
-    })).min(1, 'Please, select at least 1 type'),
+    })),
     date: z.string()
 })
 
