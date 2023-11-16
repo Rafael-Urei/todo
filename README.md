@@ -9,6 +9,10 @@ I am training other features, frameworks and libs. Another goal is to use it to 
 
 ![Prototype](./.github/image.png)
 
+# Jira
+
+![Prototype](<./.github/image(1).png>)
+
 ## Reqeuriments
 
 1. NextJS
