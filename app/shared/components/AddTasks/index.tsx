@@ -24,6 +24,8 @@ import { formatDateToString } from "../../utils/formatDate";
 import { TasksType } from "../../types/Tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../../schema/formSchema";
+import { createTask } from "../../services/tasks";
+import { useTasks } from "../../hooks/useTasks";
 
 const selected = {
   display: "flex",
@@ -51,6 +53,8 @@ export function AddTaskButton() {
     ModalType.ADD_TASK
   );
 
+  const { setTasks } = useTasks();
+
   const {
     register,
     formState: { errors },
@@ -66,11 +70,15 @@ export function AddTaskButton() {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const onSubmit = (data: TasksType) => console.log(data);
+  const onSubmit = (data: TasksType) => {
+    console.log(data);
+    createTask(data, setTasks);
+  };
 
   const handleNext = () => {
     {
       triggerError() && setActive((prev) => prev + 1), clearErrors();
+      console.log(getValues("type"));
     }
   };
 
@@ -177,7 +185,6 @@ export function AddTaskButton() {
               <TextField
                 {...register("date")}
                 value={formatDateToString(selectedDate)}
-                disabled
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <StaticDatePicker

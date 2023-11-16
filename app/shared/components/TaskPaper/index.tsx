@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
-import { formatType } from "../../utils/formatType";
 import { TasksType } from "../../types/Tasks";
 import { motion } from "framer-motion";
 import { Trash } from "lucide-react";
@@ -24,6 +23,7 @@ import { useModal } from "../../hooks/useModal";
 import { ModalComponent } from "../Modal";
 import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
 import { format } from "date-fns";
+import { useTasks } from "../../hooks/useTasks";
 
 type Props = {
   task: TasksType;
@@ -37,10 +37,22 @@ function TaskPaper({ task }: Props) {
     ModalType.EDIT_TASK
   );
 
+  const { tasks, setTasks } = useTasks();
+
   const handleDeleteTask = () => {
-    notifyIfSuccess(`${task.title} deleted with success!`);
-    notifyIfFailed(`${task.title} delete failed!`);
-    deleteModalProps.onClose();
+    try {
+      const newTasks = tasks.filter(
+        (taskFromList) => taskFromList.id !== task.id
+      );
+      setTasks(newTasks);
+      notifyIfSuccess(`${task.title} deleted with success!`);
+    } catch (error) {
+      notifyIfFailed(
+        "Unfortunately an error has occurred while deleting your task, please try again!"
+      );
+    } finally {
+      deleteModalProps.onClose();
+    }
   };
 
   const handleEditTask = () => {
@@ -58,9 +70,16 @@ function TaskPaper({ task }: Props) {
       >
         <Card sx={{ minWidth: 400, margin: 2 }}>
           <CardHeader
-            avatar={
-              <Chip label={task.type.map((type) => type)} variant="outlined" />
-            }
+            avatar={task.type.map((typeObject) => {
+              return (
+                <Chip
+                  key={typeObject.id}
+                  label={typeObject.title}
+                  variant="outlined"
+                  sx={{ marginX: 1 }}
+                />
+              );
+            })}
             title={task.title}
             subheader={format(new Date(task.date), "yyyy/MM/dd cccc")}
           ></CardHeader>
