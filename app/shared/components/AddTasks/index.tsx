@@ -18,7 +18,6 @@ import { ModalComponent } from "../Modal";
 import { useState } from "react";
 import { labels } from "../../utils/addTasksFormLabels";
 import { Controller, useForm } from "react-hook-form";
-import { Labels } from "../../types/Labels";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { formatDateToString } from "../../utils/formatDate";
@@ -58,18 +57,21 @@ export function AddTaskButton() {
     control,
     getValues,
     handleSubmit,
+    trigger,
+    clearErrors,
+    reset,
   } = useForm<TasksType>({ resolver: zodResolver(Form) });
 
   const [active, setActive] = useState(0);
-
-  const [selectedTypes, setSelectedTypes] = useState<Labels[]>();
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const onSubmit = (data: TasksType) => console.log(data);
 
   const handleNext = () => {
-    setActive((prev) => prev + 1);
+    {
+      triggerError() && setActive((prev) => prev + 1), clearErrors();
+    }
   };
 
   const handleBack = () => {
@@ -77,7 +79,21 @@ export function AddTaskButton() {
   };
 
   const handleReset = () => {
+    reset();
     setActive(0);
+  };
+
+  const triggerError = () => {
+    if (active === 0 && !getValues("title")) {
+      trigger("title");
+      return false;
+    } else if (active === 2 && getValues("type").length === 0) {
+      trigger("type");
+      return false;
+    } else if (active === 3 && !getValues("date")) {
+      trigger("date");
+      return false;
+    } else return true;
   };
 
   return (
@@ -122,7 +138,10 @@ export function AddTaskButton() {
                     multiple
                     defaultValue={[]}
                     getOptionLabel={(option) => option.title}
-                    onChange={(event, optionsArray) => onChange(optionsArray)}
+                    onChange={(event, optionsArray) => {
+                      onChange(optionsArray);
+                      clearErrors("type");
+                    }}
                     disableCloseOnSelect
                     options={options}
                     renderOption={(props, option) => {
@@ -158,6 +177,7 @@ export function AddTaskButton() {
               <TextField
                 {...register("date")}
                 value={formatDateToString(selectedDate)}
+                disabled
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <StaticDatePicker
@@ -175,6 +195,10 @@ export function AddTaskButton() {
 
               <Button type="submit" onClick={handleSubmit(onSubmit)}>
                 Submit
+              </Button>
+
+              <Button type="reset" onClick={handleReset}>
+                Reset
               </Button>
             </Box>
           ) : (
