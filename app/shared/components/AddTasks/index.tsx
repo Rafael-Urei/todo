@@ -4,6 +4,9 @@ import {
   Autocomplete,
   Box,
   Button,
+  Checkbox,
+  Chip,
+  ListItem,
   Step,
   StepLabel,
   Stepper,
@@ -15,7 +18,8 @@ import { ModalType } from "../../types/ModalType";
 import { ModalComponent } from "../Modal";
 import { useState } from "react";
 import { labels } from "../../utils/addTasksFormLabels";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { Labels } from "../../types/Labels";
 
 const selected = {
   display: "flex",
@@ -39,11 +43,16 @@ export function AddTaskButton() {
   const {
     register,
     formState: { errors },
+    control,
   } = useForm();
 
   const [active, setActive] = useState(0);
 
-  const handleNext = () => {};
+  const [selectedTypes, setSelectedTypes] = useState<Labels[]>();
+
+  const handleNext = () => {
+    setActive((prev) => prev + 1);
+  };
 
   const handleBack = () => {
     if (active > 0) setActive((prev) => prev - 1);
@@ -64,8 +73,8 @@ export function AddTaskButton() {
         <Stepper activeStep={active} sx={{ marginTop: 5 }}>
           {labels.map((label, index) => {
             return (
-              <Step key={label} sx={{ cursor: "pointer" }}>
-                <StepLabel>{label}</StepLabel>
+              <Step key={label.id} sx={{ cursor: "pointer" }}>
+                <StepLabel>{label.title}</StepLabel>
               </Step>
             );
           })}
@@ -82,8 +91,42 @@ export function AddTaskButton() {
             </Box>
             <Box sx={active === 2 ? selected : notSelected}>
               <Typography>Type</Typography>
-              <TextField {...register("type")} />
-              <Autocomplete />
+              <Controller
+                name="category"
+                control={control}
+                defaultValue={[]}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    multiple
+                    defaultValue={[]}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, optionsArray) =>
+                      setSelectedTypes(optionsArray)
+                    }
+                    disableCloseOnSelect
+                    options={labels}
+                    renderOption={(props, option) => {
+                      return (
+                        <ListItem {...props} key={option.id}>
+                          {option.title}
+                        </ListItem>
+                      );
+                    }}
+                    renderTags={(tagValue) => {
+                      return tagValue.map((option, index) => (
+                        <Chip
+                          key={option.id}
+                          label={option.title}
+                          sx={{ marginX: 1 }}
+                        />
+                      ));
+                    }}
+                    renderInput={(params) => (
+                      <TextField key={params.id} {...params} />
+                    )}
+                  />
+                )}
+              />
             </Box>
             <Box sx={active === 3 ? selected : notSelected}>
               <Typography>Date</Typography>

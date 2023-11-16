@@ -1,1 +1,1 @@
-export const labels = ['Study', 'Description', 'Type', 'Date']
+export const labels = [{id: 1, title: 'Study'}, {id: 2, title: 'Work'}, {id: 3, title: 'Trip'}]
