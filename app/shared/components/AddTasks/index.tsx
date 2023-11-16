@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Autocomplete,
   Box,
   Button,
   Step,
@@ -82,6 +83,7 @@ export function AddTaskButton() {
             <Box sx={active === 2 ? selected : notSelected}>
               <Typography>Type</Typography>
               <TextField {...register("type")} />
+              <Autocomplete />
             </Box>
             <Box sx={active === 3 ? selected : notSelected}>
               <Typography>Date</Typography>
