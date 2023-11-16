@@ -1,1 +1,1 @@
-export const labels = ['Study', 'Description', 'Type', 'Date']
+export const labels = ['Title', 'Description', 'Type', 'Date']

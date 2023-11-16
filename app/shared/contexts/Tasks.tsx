@@ -29,43 +29,14 @@ export default function TasksProvider({
 
   const searchDeferred = useDeferredValue(search);
 
-  const [tasks, setTasks] = useState<TasksType[]>([
-    {
-      id: "1",
-      title: "Study React",
-      description: "Lorem",
-      type: ["Study"],
-      date: "2023-11-16T00:00:00-03:00",
-    },
-    {
-      id: "2",
-      title: "Work",
-      description: "Lorem",
-      type: ["Work"],
-      date: "2023-11-18T00:00:00-03:00",
-    },
-    {
-      id: "3",
-      title: "Travel to Rio de Janeiro",
-      description: "Lorem",
-      type: ["Trip"],
-      date: "2023-11-20T00:00:00-03:00",
-    },
-    {
-      id: "4",
-      title: "Play Resident Evil 4",
-      description: "Lorem",
-      type: ["Personal"],
-      date: "2023-11-25T00:00:00-03:00",
-    },
-  ]);
+  const [tasks, setTasks] = useState<TasksType[]>([]);
 
   const filteredTasks = tasks.filter((task) => {
     if (type === FilterType.ALL && !date)
       return task.title.toLowerCase().includes(searchDeferred.toLowerCase());
     if (date && getDate(date) === getDate(new Date(task.date)))
       return getDate(date) === getDate(new Date(task.date));
-    return task.type[0].toLowerCase() === FilterType[type].toLowerCase();
+    return task.type[0].title.toLowerCase() === FilterType[type].toLowerCase();
   });
 
   return (
