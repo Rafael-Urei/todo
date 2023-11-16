@@ -23,6 +23,7 @@ import { useModal } from "../../hooks/useModal";
 import { ModalComponent } from "../Modal";
 import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
 import { format } from "date-fns";
+import { useTasks } from "../../hooks/useTasks";
 
 type Props = {
   task: TasksType;
@@ -36,10 +37,22 @@ function TaskPaper({ task }: Props) {
     ModalType.EDIT_TASK
   );
 
+  const { tasks, setTasks } = useTasks();
+
   const handleDeleteTask = () => {
-    notifyIfSuccess(`${task.title} deleted with success!`);
-    notifyIfFailed(`${task.title} delete failed!`);
-    deleteModalProps.onClose();
+    try {
+      const newTasks = tasks.filter(
+        (taskFromList) => taskFromList.id !== task.id
+      );
+      setTasks(newTasks);
+      notifyIfSuccess(`${task.title} deleted with success!`);
+    } catch (error) {
+      notifyIfFailed(
+        "Unfortunately an error has occurred while deleting your task, please try again!"
+      );
+    } finally {
+      deleteModalProps.onClose();
+    }
   };
 
   const handleEditTask = () => {
