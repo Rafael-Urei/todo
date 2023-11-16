@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
-import { formatType } from "../../utils/formatType";
 import { TasksType } from "../../types/Tasks";
 import { motion } from "framer-motion";
 import { Trash } from "lucide-react";
@@ -58,12 +57,16 @@ function TaskPaper({ task }: Props) {
       >
         <Card sx={{ minWidth: 400, margin: 2 }}>
           <CardHeader
-            avatar={
-              <Chip
-                label={task.type.map((type) => type.title)}
-                variant="outlined"
-              />
-            }
+            avatar={task.type.map((typeObject) => {
+              return (
+                <Chip
+                  key={typeObject.id}
+                  label={typeObject.title}
+                  variant="outlined"
+                  sx={{ marginX: 1 }}
+                />
+              );
+            })}
             title={task.title}
             subheader={format(new Date(task.date), "yyyy/MM/dd cccc")}
           ></CardHeader>
