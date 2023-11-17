@@ -6,7 +6,7 @@ export const Form = z.object({
     type: z.array(z.object({
         id: z.number(),
         title: z.string()
-    })),
+    })).nonempty('Please select at least 1 type for this task'),
     date: z.string()
 })
 
