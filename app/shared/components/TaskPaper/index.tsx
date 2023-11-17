@@ -22,7 +22,6 @@ import { ModalType } from "../../types/ModalType";
 import { useModal } from "../../hooks/useModal";
 import { ModalComponent } from "../Modal";
 import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
-import { format } from "date-fns";
 import { useTasks } from "../../hooks/useTasks";
 
 type Props = {
@@ -81,7 +80,6 @@ function TaskPaper({ task }: Props) {
               );
             })}
             title={task.title}
-            subheader={format(new Date(task.date), "yyyy/MM/dd cccc")}
           ></CardHeader>
           <Accordion component={"div"} sx={{ width: "100%" }}>
             <AccordionSummary expandIcon={<ExpandMore />}>

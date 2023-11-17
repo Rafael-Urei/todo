@@ -26,6 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../../schema/formSchema";
 import { createTask } from "../../services/tasks";
 import { useTasks } from "../../hooks/useTasks";
+import { formatISO } from "date-fns";
 
 const selected = {
   display: "flex",
@@ -53,7 +54,7 @@ export function AddTaskButton() {
     ModalType.ADD_TASK
   );
 
-  const { setTasks } = useTasks();
+  const { setTasks, tasks } = useTasks();
 
   const {
     register,
@@ -180,13 +181,18 @@ export function AddTaskButton() {
             </Box>
             <Box sx={active === 3 ? selected : notSelected}>
               <Typography>Date</Typography>
-              <TextField
-                {...register("date")}
-                value={formatDateToString(selectedDate)}
-              />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <StaticDatePicker
-                  onChange={(value: Date | null) => setSelectedDate(value)}
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <StaticDatePicker
+                      value={selectedDate}
+                      onChange={(value: Date | null) => {
+                        onChange(value?.toISOString());
+                      }}
+                    />
+                  )}
                 />
               </LocalizationProvider>
             </Box>
