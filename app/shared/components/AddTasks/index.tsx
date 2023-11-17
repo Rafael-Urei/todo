@@ -27,6 +27,7 @@ import { Form } from "../../schema/formSchema";
 import { createTask } from "../../services/tasks";
 import { useTasks } from "../../hooks/useTasks";
 import { formatISO } from "date-fns";
+import { taskTypes } from "../../utils/types";
 
 const selected = {
   display: "flex",
@@ -41,13 +42,6 @@ const notSelected = {
   overflow: "hidden",
   height: 0,
 };
-
-const options = [
-  { id: 1, title: "Study" },
-  { id: 2, title: "Work" },
-  { id: 3, title: "Trip" },
-  { id: 4, title: "Personal" },
-];
 
 export function AddTaskButton() {
   const { openModal: openAddTaskModal, ...addModalProps } = useModal(
@@ -144,27 +138,23 @@ export function AddTaskButton() {
                   <Autocomplete
                     multiple
                     defaultValue={[]}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option}
                     onChange={(event, optionsArray) => {
                       onChange(optionsArray);
                       clearErrors("type");
                     }}
                     disableCloseOnSelect
-                    options={options}
+                    options={taskTypes}
                     renderOption={(props, option) => {
                       return (
-                        <ListItem {...props} key={option.id}>
-                          {option.title}
+                        <ListItem {...props} key={option}>
+                          {option}
                         </ListItem>
                       );
                     }}
                     renderTags={(tagValue) => {
                       return tagValue.map((option, index) => (
-                        <Chip
-                          key={option.id}
-                          label={option.title}
-                          sx={{ marginX: 1 }}
-                        />
+                        <Chip key={option} label={option} sx={{ marginX: 1 }} />
                       ));
                     }}
                     renderInput={(params) => (

@@ -31,12 +31,12 @@ export default function TasksProvider({
 
   const [tasks, setTasks] = useState<TasksType[]>([]);
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = tasks.filter((task, index) => {
     if (type === FilterType.ALL && !date)
       return task.title.toLowerCase().includes(searchDeferred.toLowerCase());
     if (date && getDate(date) === getDate(new Date(task.date)))
       return getDate(date) === getDate(new Date(task.date));
-    return task.type[0].title.toLowerCase() === FilterType[type].toLowerCase();
+    return task.type.includes(FilterType[type]);
   });
 
   return (
