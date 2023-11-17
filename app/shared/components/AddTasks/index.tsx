@@ -71,14 +71,12 @@ export function AddTaskButton() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const onSubmit = (data: TasksType) => {
-    console.log(data);
     createTask(data, setTasks);
   };
 
   const handleNext = () => {
     {
       triggerError() && setActive((prev) => prev + 1), clearErrors();
-      console.log(getValues("type"));
     }
   };
 
