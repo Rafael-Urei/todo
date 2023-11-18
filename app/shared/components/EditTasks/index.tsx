@@ -69,6 +69,12 @@ export function EditTask({ prop }: Props) {
     }
   };
 
+  const handleCloseAndReset = () => {
+    editModalProps.onClose();
+    reset();
+    clearErrors();
+  };
+
   return (
     <>
       <IconButton onClick={openEditModal}>
@@ -77,7 +83,7 @@ export function EditTask({ prop }: Props) {
       <ModalComponent
         title="Edit Task"
         open={editModalProps.modal === ModalType.EDIT_TASK}
-        close={editModalProps.onClose}
+        close={handleCloseAndReset}
       >
         <Box
           component={"form"}
@@ -85,6 +91,7 @@ export function EditTask({ prop }: Props) {
           display={"flex"}
           flexDirection={"column"}
           gap={2}
+          marginTop={5}
         >
           <Box>
             <Typography>Title</Typography>
