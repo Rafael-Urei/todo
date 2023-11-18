@@ -18,15 +18,13 @@ import { ModalComponent } from "../Modal";
 import { useState } from "react";
 import { labels } from "../../utils/addTasksFormLabels";
 import { Controller, useForm } from "react-hook-form";
-import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { formatDateToString } from "../../utils/formatDate";
 import { TasksType } from "../../types/Tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../../schema/formSchema";
 import { createTask } from "../../services/tasks";
 import { useTasks } from "../../hooks/useTasks";
-import { formatISO } from "date-fns";
 import { taskTypes } from "../../utils/types";
 
 const selected = {
@@ -66,7 +64,7 @@ export function AddTaskButton() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const onSubmit = (data: TasksType) => {
-    createTask(data, setTasks);
+    createTask(data, setTasks, handleReset);
   };
 
   const handleNext = () => {
@@ -82,6 +80,7 @@ export function AddTaskButton() {
   const handleReset = () => {
     reset();
     setActive(0);
+    addModalProps.onClose();
   };
 
   const triggerError = () => {
@@ -105,10 +104,13 @@ export function AddTaskButton() {
         open={addModalProps.modal === ModalType.ADD_TASK}
         close={addModalProps.onClose}
       >
-        <Stepper activeStep={active} sx={{ marginTop: 5 }}>
+        <Stepper
+          activeStep={active}
+          sx={{ marginTop: 5, display: "flex", flexWrap: "wrap" }}
+        >
           {labels.map((label) => {
             return (
-              <Step key={label} sx={{ cursor: "pointer" }}>
+              <Step key={label} sx={{ marginY: 2 }}>
                 <StepLabel>{label}</StepLabel>
               </Step>
             );
@@ -176,7 +178,7 @@ export function AddTaskButton() {
                   name="date"
                   control={control}
                   render={({ field: { value, onChange } }) => (
-                    <StaticDatePicker
+                    <DatePicker
                       value={selectedDate}
                       onChange={(value: Date | null) => {
                         onChange(value?.toISOString());
