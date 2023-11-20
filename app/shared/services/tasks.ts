@@ -3,7 +3,7 @@ import { TasksType } from "../types/Tasks";
 import { notifyIfFailed, notifyIfSuccess } from "../utils/Toasts";
 import {v4} from 'uuid';
 
-export const createTask = (data: TasksType, setTasks: Dispatch<SetStateAction<TasksType[]>>) => {
+export const createTask = (data: TasksType, setTasks: Dispatch<SetStateAction<TasksType[]>>, handleReset: () => void) => {
     try {
         setTasks(prev => {
             return [
@@ -14,5 +14,7 @@ export const createTask = (data: TasksType, setTasks: Dispatch<SetStateAction<Ta
         notifyIfSuccess('Task created with success!')
     } catch (error) {
         notifyIfFailed('An error has occurred while creating your task, please try again.')
+    } finally {
+        handleReset()
     }
 };

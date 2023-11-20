@@ -6,7 +6,7 @@ import { Sticker } from "../Sticky";
 import { ButtonAddSticker } from "../AddSticker";
 
 export default function StickersList() {
-  const { filteredTasks } = useTasks();
+  const { stickers } = useTasks();
 
   return (
     <List
@@ -18,8 +18,8 @@ export default function StickersList() {
       }}
     >
       <ButtonAddSticker />
-      {filteredTasks.map((task) => {
-        return <Sticker key={task.id} task={task} />;
+      {stickers.map((sticker) => {
+        return <Sticker key={sticker.id} prop={sticker} />;
       })}
     </List>
   );
