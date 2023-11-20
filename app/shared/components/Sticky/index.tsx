@@ -21,7 +21,7 @@ export function Sticker({ prop }: Props) {
         width={300}
         height={300}
         padding={2}
-        sx={{ backgroundColor: "#d2d2d2" }}
+        border={1}
       >
         <Typography component={"h1"} fontWeight={600}>
           {prop.title}

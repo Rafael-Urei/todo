@@ -4,6 +4,10 @@ import {
   Box,
   Button,
   ButtonBase,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
   Paper,
   TextField,
   TextareaAutosize,
@@ -20,6 +24,8 @@ import { StickerForm } from "../../schema/formSchema";
 import { useTasks } from "../../hooks/useTasks";
 import { v4 as uuid } from "uuid";
 import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
+import { useState } from "react";
+import { Delete } from "@mui/icons-material";
 
 export function ButtonAddSticker() {
   const { openModal: openStickerModal, ...stickerModalProps } = useModal(
@@ -28,11 +34,15 @@ export function ButtonAddSticker() {
 
   const { stickers, setStickers } = useTasks();
 
+  const [listOfItens, setListOfItens] = useState<string[]>([]);
+
   const {
     register,
     formState: { errors },
     reset,
     handleSubmit,
+    getValues,
+    setValue,
   } = useForm<Stickers>({ resolver: zodResolver(StickerForm) });
 
   const handleResetOnClose = () => {
@@ -77,45 +87,83 @@ export function ButtonAddSticker() {
       >
         <Box
           component={"form"}
-          display={"flex"}
           onSubmit={handleSubmit(onSubmit)}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={4}
         >
-          <Paper
+          <Box marginTop={2}>
+            <Typography>Title</Typography>
+            <TextField
+              {...register("title")}
+              variant="standard"
+              error={!!errors.title}
+              helperText={errors.title?.message}
+              fullWidth
+            />
+          </Box>
+          <Box flex={1}>
+            <Typography>Description</Typography>
+            <TextField
+              {...register("description")}
+              fullWidth
+              error={!!errors.description}
+              helperText={errors.description?.message}
+              sx={{ marginBottom: 2 }}
+            />
+            <Button
+              onClick={() => {
+                if (getValues("description") !== "")
+                  setListOfItens((prev) => [...prev, getValues("description")]);
+                setValue("description", "");
+              }}
+            >
+              Add
+            </Button>
+          </Box>
+          <List
             sx={{
+              maxHeight: 200,
+              overflow: "scroll",
               display: "flex",
-              height: 300,
-              width: "100%",
-              padding: 3,
               flexDirection: "column",
-              gap: 3,
+              gap: 1,
+              paddingX: 2,
             }}
           >
-            <Box display={"flex"} alignItems={"center"} gap={1}>
-              <Typography>Title</Typography>
-              <TextField
-                {...register("title")}
-                variant="standard"
-                error={!!errors.title}
-                helperText={errors.title?.message}
-                fullWidth
-              />
-            </Box>
-            <Box flex={1}>
-              <Typography>Description</Typography>
-              <TextField
-                {...register("description")}
-                fullWidth
-                error={!!errors.description}
-                helperText={errors.description?.message}
-              />
-            </Box>
-            <Box display={"flex"} justifyContent={"space-between"}>
-              <Button type="button" onClick={handleResetOnClose}>
-                Cancel
-              </Button>
-              <Button type="submit">Submit</Button>
-            </Box>
-          </Paper>
+            {listOfItens.map((item) => {
+              return (
+                <Box key={item} border={1} borderRadius={1}>
+                  <ListItem>
+                    <ListItemText
+                      primary={item}
+                      sx={{
+                        width: "80%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        const newItens = listOfItens.filter(
+                          (itemToDelete) => item !== itemToDelete
+                        );
+                        setListOfItens(newItens);
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItem>
+                </Box>
+              );
+            })}
+          </List>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Button type="button" onClick={handleResetOnClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Submit</Button>
+          </Box>
         </Box>
       </ModalComponent>
     </>
