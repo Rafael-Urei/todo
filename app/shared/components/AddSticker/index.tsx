@@ -17,11 +17,16 @@ import { useForm } from "react-hook-form";
 import { Stickers } from "../../types/Stickers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StickerForm } from "../../schema/formSchema";
+import { useTasks } from "../../hooks/useTasks";
+import { v4 as uuid } from "uuid";
+import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
 
 export function ButtonAddSticker() {
   const { openModal: openStickerModal, ...stickerModalProps } = useModal(
     ModalType.ADD_STICKER
   );
+
+  const { stickers, setStickers } = useTasks();
 
   const {
     register,
@@ -36,7 +41,17 @@ export function ButtonAddSticker() {
   };
 
   const onSubmit = (data: Stickers) => {
-    handleResetOnClose();
+    try {
+      setStickers((prev) => {
+        return [...prev, { ...data, id: uuid() }];
+      });
+    } catch (error) {
+      notifyIfFailed("Failed while creating your sticker.");
+      handleResetOnClose();
+    } finally {
+      notifyIfSuccess("Your sticker was created with success!");
+      handleResetOnClose();
+    }
   };
 
   return (
