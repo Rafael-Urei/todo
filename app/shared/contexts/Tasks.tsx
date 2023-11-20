@@ -11,11 +11,14 @@ import { useFilter } from "../hooks/useFilter";
 import { TasksType } from "../types/Tasks";
 import { FilterType } from "../types/FilterType";
 import { getDate } from "date-fns";
+import { Stickers } from "../types/Stickers";
 
 interface TasksContextData {
   tasks: TasksType[];
   setTasks: Dispatch<SetStateAction<TasksType[]>>;
   filteredTasks: TasksType[];
+  stickers: Stickers[];
+  setStickers: Dispatch<SetStateAction<Stickers[]>>;
 }
 
 export const TasksContext = createContext({} as TasksContextData);
@@ -31,6 +34,8 @@ export default function TasksProvider({
 
   const [tasks, setTasks] = useState<TasksType[]>([]);
 
+  const [stickers, setStickers] = useState<Stickers[]>([]);
+
   const filteredTasks = tasks.filter((task, index) => {
     if (type === FilterType.ALL && !date)
       return task.title.toLowerCase().includes(searchDeferred.toLowerCase());
@@ -40,7 +45,9 @@ export default function TasksProvider({
   });
 
   return (
-    <TasksContext.Provider value={{ tasks, setTasks, filteredTasks }}>
+    <TasksContext.Provider
+      value={{ tasks, setTasks, filteredTasks, stickers, setStickers }}
+    >
       {children}
     </TasksContext.Provider>
   );
