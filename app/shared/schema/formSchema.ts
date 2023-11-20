@@ -7,3 +7,7 @@ export const Form = z.object({
     date: z.string()
 })
 
+export const StickerForm = z.object({
+    title: z.string().min(1, 'This field is required!'),
+    description: z.string()
+})

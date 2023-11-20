@@ -1,12 +1,13 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { TasksType } from "../../types/Tasks";
 import { motion } from "framer-motion";
+import { Stickers } from "../../types/Stickers";
 
 type Props = {
-  task: TasksType;
+  prop: Stickers;
 };
 
-export function Sticker({ task }: Props) {
+export function Sticker({ prop }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -23,11 +24,11 @@ export function Sticker({ task }: Props) {
         sx={{ backgroundColor: "#d2d2d2" }}
       >
         <Typography component={"h1"} fontWeight={600}>
-          {task.title}
+          {prop.title}
         </Typography>
         <Divider />
         <Typography component={"p"} padding={2}>
-          {task.description}
+          {prop.description}
         </Typography>
       </Box>
     </motion.div>

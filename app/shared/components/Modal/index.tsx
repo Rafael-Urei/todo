@@ -25,6 +25,10 @@ const desktop = {
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  display: "flex",
+  flexDirection: "column",
+  aligntItems: "center",
+  jsutifyContent: "center",
 };
 
 const mobile = {
@@ -37,6 +41,10 @@ const mobile = {
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  display: "flex",
+  flexDirection: "column",
+  aligntItems: "center",
+  jsutifyContent: "center",
 };
 
 export function ModalComponent({ title, children, open, close }: Props) {
