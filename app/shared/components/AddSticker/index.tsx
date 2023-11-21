@@ -111,53 +111,7 @@ export function ButtonAddSticker() {
               helperText={errors.description?.message}
               sx={{ marginBottom: 2 }}
             />
-            <Button
-              onClick={() => {
-                if (getValues("description") !== "")
-                  setListOfItens((prev) => [...prev, getValues("description")]);
-                setValue("description", "");
-              }}
-            >
-              Add
-            </Button>
           </Box>
-          <List
-            sx={{
-              maxHeight: 200,
-              overflow: "scroll",
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              paddingX: 2,
-            }}
-          >
-            {listOfItens.map((item) => {
-              return (
-                <Box key={item} border={1} borderRadius={1}>
-                  <ListItem>
-                    <ListItemText
-                      primary={item}
-                      sx={{
-                        width: "80%",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    />
-                    <IconButton
-                      onClick={() => {
-                        const newItens = listOfItens.filter(
-                          (itemToDelete) => item !== itemToDelete
-                        );
-                        setListOfItens(newItens);
-                      }}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </ListItem>
-                </Box>
-              );
-            })}
-          </List>
           <Box display={"flex"} justifyContent={"space-between"}>
             <Button type="button" onClick={handleResetOnClose}>
               Cancel
