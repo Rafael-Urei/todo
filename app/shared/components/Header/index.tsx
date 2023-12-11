@@ -96,7 +96,7 @@ export function Header() {
             <MenuList>
               <MenuItem sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {" "}
-                <User2 /> Profile
+                <User2 /> <Link href="/profile">Profile</Link>
               </MenuItem>
               <Divider></Divider>
               <MenuItem sx={{ display: "flex", alignItems: "center", gap: 1 }}>

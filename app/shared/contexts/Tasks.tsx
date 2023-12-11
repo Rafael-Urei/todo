@@ -32,7 +32,7 @@ export default function TasksProvider({
 
   const searchDeferred = useDeferredValue(search);
 
-  const [tasks, setTasks] = useState<TasksType[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   const [stickers, setStickers] = useState<Stickers[]>([]);
 
