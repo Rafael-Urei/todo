@@ -57,14 +57,14 @@ export function Header() {
                 <ListItemText>Home</ListItemText>
               </ListItemButton>
             </Link>
-            <Link href="/all-tasks">
+            <Link href="/tasks">
               <ListItemButton
-                selected={pathname === "/all-tasks"}
+                selected={pathname === "/tasks"}
                 sx={{ display: "flex", alignItems: "center", gap: 2 }}
               >
                 <Task />
                 <Badge variant="dot">
-                  <ListItemText>All</ListItemText>
+                  <ListItemText>Tasks</ListItemText>
                 </Badge>
               </ListItemButton>
             </Link>
@@ -96,7 +96,7 @@ export function Header() {
             <MenuList>
               <MenuItem sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {" "}
-                <User2 /> Profile
+                <User2 /> <Link href="/profile">Profile</Link>
               </MenuItem>
               <Divider></Divider>
               <MenuItem sx={{ display: "flex", alignItems: "center", gap: 1 }}>

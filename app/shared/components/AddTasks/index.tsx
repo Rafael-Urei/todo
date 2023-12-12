@@ -18,14 +18,14 @@ import { ModalComponent } from "../Modal";
 import { useState } from "react";
 import { labels } from "../../utils/addTasksFormLabels";
 import { Controller, useForm } from "react-hook-form";
-import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { formatDateToString } from "../../utils/formatDate";
 import { TasksType } from "../../types/Tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../../schema/formSchema";
 import { createTask } from "../../services/tasks";
 import { useTasks } from "../../hooks/useTasks";
+import { taskTypes } from "../../utils/types";
 
 const selected = {
   display: "flex",
@@ -41,19 +41,12 @@ const notSelected = {
   height: 0,
 };
 
-const options = [
-  { id: 1, title: "Study" },
-  { id: 2, title: "Work" },
-  { id: 3, title: "Trip" },
-  { id: 4, title: "Personal" },
-];
-
 export function AddTaskButton() {
   const { openModal: openAddTaskModal, ...addModalProps } = useModal(
     ModalType.ADD_TASK
   );
 
-  const { setTasks } = useTasks();
+  const { setTasks, tasks } = useTasks();
 
   const {
     register,
@@ -71,14 +64,12 @@ export function AddTaskButton() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const onSubmit = (data: TasksType) => {
-    console.log(data);
-    createTask(data, setTasks);
+    createTask(data, setTasks, handleReset);
   };
 
   const handleNext = () => {
     {
       triggerError() && setActive((prev) => prev + 1), clearErrors();
-      console.log(getValues("type"));
     }
   };
 
@@ -89,6 +80,7 @@ export function AddTaskButton() {
   const handleReset = () => {
     reset();
     setActive(0);
+    addModalProps.onClose();
   };
 
   const triggerError = () => {
@@ -112,10 +104,13 @@ export function AddTaskButton() {
         open={addModalProps.modal === ModalType.ADD_TASK}
         close={addModalProps.onClose}
       >
-        <Stepper activeStep={active} sx={{ marginTop: 5 }}>
+        <Stepper
+          activeStep={active}
+          sx={{ marginTop: 5, display: "flex", flexWrap: "wrap" }}
+        >
           {labels.map((label) => {
             return (
-              <Step key={label} sx={{ cursor: "pointer" }}>
+              <Step key={label} sx={{ marginY: 2 }}>
                 <StepLabel>{label}</StepLabel>
               </Step>
             );
@@ -145,27 +140,23 @@ export function AddTaskButton() {
                   <Autocomplete
                     multiple
                     defaultValue={[]}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option}
                     onChange={(event, optionsArray) => {
                       onChange(optionsArray);
                       clearErrors("type");
                     }}
                     disableCloseOnSelect
-                    options={options}
+                    options={taskTypes}
                     renderOption={(props, option) => {
                       return (
-                        <ListItem {...props} key={option.id}>
-                          {option.title}
+                        <ListItem {...props} key={option}>
+                          {option}
                         </ListItem>
                       );
                     }}
                     renderTags={(tagValue) => {
                       return tagValue.map((option, index) => (
-                        <Chip
-                          key={option.id}
-                          label={option.title}
-                          sx={{ marginX: 1 }}
-                        />
+                        <Chip key={option} label={option} sx={{ marginX: 1 }} />
                       ));
                     }}
                     renderInput={(params) => (
@@ -182,20 +173,29 @@ export function AddTaskButton() {
             </Box>
             <Box sx={active === 3 ? selected : notSelected}>
               <Typography>Date</Typography>
-              <TextField
-                {...register("date")}
-                value={formatDateToString(selectedDate)}
-              />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <StaticDatePicker
-                  onChange={(value: Date | null) => setSelectedDate(value)}
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                      value={selectedDate}
+                      onChange={(value: Date | null) => {
+                        onChange(value?.toISOString());
+                      }}
+                    />
+                  )}
                 />
               </LocalizationProvider>
             </Box>
           </form>
 
           {active === labels.length - 1 ? (
-            <Box marginTop={2} display={"flex"}>
+            <Box
+              marginTop={2}
+              display={"flex"}
+              justifyContent={"space-between"}
+            >
               <Button type="button" onClick={handleBack}>
                 Back
               </Button>
@@ -209,7 +209,11 @@ export function AddTaskButton() {
               </Button>
             </Box>
           ) : (
-            <Box marginTop={2} display={"flex"}>
+            <Box
+              marginTop={2}
+              display={"flex"}
+              justifyContent={"space-between"}
+            >
               <Button type="button" onClick={handleBack}>
                 Back
               </Button>

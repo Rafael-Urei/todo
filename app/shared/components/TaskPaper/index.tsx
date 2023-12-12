@@ -17,13 +17,14 @@ import React, { memo } from "react";
 import { TasksType } from "../../types/Tasks";
 import { motion } from "framer-motion";
 import { Trash } from "lucide-react";
-import { Edit, ExpandMore } from "@mui/icons-material";
+import { ExpandMore } from "@mui/icons-material";
 import { ModalType } from "../../types/ModalType";
 import { useModal } from "../../hooks/useModal";
 import { ModalComponent } from "../Modal";
 import { notifyIfFailed, notifyIfSuccess } from "../../utils/Toasts";
-import { format } from "date-fns";
 import { useTasks } from "../../hooks/useTasks";
+import { format } from "date-fns";
+import { EditTask } from "../EditTasks";
 
 type Props = {
   task: TasksType;
@@ -73,15 +74,15 @@ function TaskPaper({ task }: Props) {
             avatar={task.type.map((typeObject) => {
               return (
                 <Chip
-                  key={typeObject.id}
-                  label={typeObject.title}
+                  key={typeObject}
+                  label={typeObject}
                   variant="outlined"
                   sx={{ marginX: 1 }}
                 />
               );
             })}
             title={task.title}
-            subheader={format(new Date(task.date), "yyyy/MM/dd cccc")}
+            subheader={format(new Date(task.date), "yyyy/MM/dd, cccc")}
           ></CardHeader>
           <Accordion component={"div"} sx={{ width: "100%" }}>
             <AccordionSummary expandIcon={<ExpandMore />}>
@@ -100,9 +101,7 @@ function TaskPaper({ task }: Props) {
                 <IconButton onClick={openDeleteModal}>
                   <Trash color="#e11d48" />
                 </IconButton>
-                <IconButton onClick={openEditModal}>
-                  <Edit />
-                </IconButton>
+                <EditTask prop={task} />
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -121,21 +120,6 @@ function TaskPaper({ task }: Props) {
         <Box display={"flex"} justifyContent={"space-between"}>
           <Button onClick={deleteModalProps.onClose}>Cancel</Button>
           <Button onClick={handleDeleteTask}>Delete</Button>
-        </Box>
-      </ModalComponent>
-
-      <ModalComponent
-        title="Save Changes?"
-        open={editModalProps.modal === ModalType.EDIT_TASK}
-        close={editModalProps.onClose}
-      >
-        <Typography padding={4} textAlign={"center"}>
-          This process cannot be undone, are you sure you want to edit this
-          task?
-        </Typography>
-        <Box display={"flex"} justifyContent={"space-between"}>
-          <Button onClick={editModalProps.onClose}>Cancel</Button>
-          <Button onClick={handleEditTask}>Save Changes</Button>
         </Box>
       </ModalComponent>
     </>
