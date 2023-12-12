@@ -2,6 +2,8 @@
 
 import { setCookie } from "nookies";
 import { ReactNode, createContext, useState } from "react";
+import { useTasks } from "../hooks/useTasks";
+import { RequestTaskType } from "../types/Tasks";
 
 type User = {
   token: string;
@@ -30,6 +32,7 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const { setTasks } = useTasks();
   const isAuth = !!user;
   async function signIn({ email, password_hash }: SignInData) {
     const userCredentials = {
@@ -46,6 +49,24 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const responseWithData = await login.json();
+
+    const res = await fetch(`http://localhost:1337/api/tasks`, {
+      headers: {
+        Authorization: `Bearer ${responseWithData.jwt}`,
+      },
+    });
+
+    const responseTasks: RequestTaskType = await res.json();
+
+    const tasks = responseTasks.data.map((task) => ({
+      id: task.id,
+      title: task.attributes.title,
+      description: task.attributes.description,
+      type: ["STUDY"],
+      date: task.attributes.createdAt,
+    }));
+
+    setTasks(tasks);
 
     setUser({
       token: responseWithData.jwt,

@@ -32,9 +32,11 @@ export default function TasksProvider({
 
   const searchDeferred = useDeferredValue(search);
 
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<TasksType[]>([]);
 
   const [stickers, setStickers] = useState<Stickers[]>([]);
+
+  console.log(tasks);
 
   const filteredTasks = tasks.filter((task, index) => {
     if (type === FilterType.ALL && !date)
