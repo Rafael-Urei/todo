@@ -191,7 +191,11 @@ export function AddTaskButton() {
           </form>
 
           {active === labels.length - 1 ? (
-            <Box marginTop={2} display={"flex"}>
+            <Box
+              marginTop={2}
+              display={"flex"}
+              justifyContent={"space-between"}
+            >
               <Button type="button" onClick={handleBack}>
                 Back
               </Button>
@@ -205,7 +209,11 @@ export function AddTaskButton() {
               </Button>
             </Box>
           ) : (
-            <Box marginTop={2} display={"flex"}>
+            <Box
+              marginTop={2}
+              display={"flex"}
+              justifyContent={"space-between"}
+            >
               <Button type="button" onClick={handleBack}>
                 Back
               </Button>
