@@ -75,6 +75,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     setCookie(undefined, "auth.token", responseWithData.jwt, {
       maxAge: 60 * 60 * 1, // 1 hour
+      path: "/",
     });
   }
   return (

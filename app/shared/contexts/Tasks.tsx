@@ -36,8 +36,6 @@ export default function TasksProvider({
 
   const [stickers, setStickers] = useState<Stickers[]>([]);
 
-  console.log(tasks);
-
   const filteredTasks = tasks.filter((task, index) => {
     if (type === FilterType.ALL && !date)
       return task.title.toLowerCase().includes(searchDeferred.toLowerCase());
